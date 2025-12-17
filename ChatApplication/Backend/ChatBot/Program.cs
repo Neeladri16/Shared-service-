@@ -21,6 +21,19 @@ namespace ChatBot
             options.UseSqlServer(builder.Configuration.GetConnectionString("ChatDb")));
 
             builder.Services.AddScoped<IChatService, ChatService>();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngular",
+                    policy =>
+                    {
+                        policy
+                            .AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -31,6 +44,7 @@ namespace ChatBot
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("AllowAngular");
 
             app.UseAuthorization();
 
