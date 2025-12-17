@@ -1,3 +1,45 @@
-<h2>💬 Chat Micro Frontend</h2>
-<p>Chat app loaded successfully!!</p>
-<p>Further chat creation !!</p>
+<div class="chat-container">
+  <div class="chat-header">
+    <div class="chat-title">💬 Chat Application</div>
+    <button class="refresh-btn" (click)="loadMessages()" [disabled]="loading">
+      {{ loading ? 'Loading...' : 'Refresh' }}
+    </button>
+  </div>
+
+  <div class="messages-container">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="status-message">
+      Loading messages...
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+      <button (click)="loadMessages()">Retry</button>
+    </div>
+
+    <!-- Messages -->
+    <div *ngFor="let msg of messages" 
+         class="message" 
+         [class.sent]="msg.isSent"
+         [class.received]="!msg.isSent">
+      <div class="message-content">{{ msg.content }}</div>
+      <div class="message-meta">
+        <span class="message-time">{{ msg.time }}</span>
+        <span *ngIf="msg.isSent" class="message-status">✓✓</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="message-input">
+    <input 
+      type="text" 
+      [(ngModel)]="newMessage"
+      (keyup.enter)="sendMessage()"
+      [disabled]="loading"
+      placeholder="Type a message...">
+    <button (click)="sendMessage()" [disabled]="!newMessage.trim() || loading">
+      Send
+    </button>
+  </div>
+</div>
